@@ -27,8 +27,8 @@ const Dots = ({selected}) => {
   return (
     <View
       style={{
-        width: 5,
-        height: 5,
+        width: 6,
+        height: 6,
         marginHorizontal: 3,
         backgroundColor,
       }}
