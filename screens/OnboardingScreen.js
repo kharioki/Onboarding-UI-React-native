@@ -1,12 +1,31 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
+import {StyleSheet, Image, Text, View, Button} from 'react-native';
+import Onboarding from 'react-native-onboarding-swiper';
 
 export default function OnboardingScreen({navigation}) {
   return (
-    <View style={styles.container}>
-      <Text>Onboarding Screen</Text>
-      <Button title="click here" onPress={() => navigation.navigate('Login')} />
-    </View>
+    <Onboarding
+      pages={[
+        {
+          backgroundColor: '#fff',
+          image: <Image source={require('../assets/online-learning.png')} />,
+          title: 'Online Learning',
+          subtitle: 'Enjoy modern online learning.',
+        },
+        {
+          backgroundColor: '#fff',
+          image: <Image source={require('../assets/dev-learning.png')} />,
+          title: 'Programming classes',
+          subtitle: 'Amazing interactive programming classes',
+        },
+        {
+          backgroundColor: '#fff',
+          image: <Image source={require('../assets/live-feedback.png')} />,
+          title: 'Live Feedback',
+          subtitle: 'Real-time feedback with trainers.',
+        },
+      ]}
+    />
   );
 }
 
