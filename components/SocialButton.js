@@ -4,7 +4,9 @@ import { windowHeight } from '../utils/Dimensions';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export default SocialButton = ({ buttonTitle, btnType, color, backgroundColor, ...rest }) => {
+FontAwesome.loadFont();
+
+const SocialButton = ({ buttonTitle, btnType, color, backgroundColor, ...rest }) => {
     let bgColor = backgroundColor;
     return (
         <TouchableOpacity style={[styles.buttonContainer, { backgroundColor: bgColor }]} {...rest}>
@@ -17,6 +19,8 @@ export default SocialButton = ({ buttonTitle, btnType, color, backgroundColor, .
         </TouchableOpacity>
     )
 }
+
+export default SocialButton;
 
 const styles = StyleSheet.create({
     buttonContainer: {

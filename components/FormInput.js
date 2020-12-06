@@ -4,7 +4,9 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { windowWidth, windowHeight } from '../utils/Dimensions';
 
-export default FormInput = ({ labelValue, placehoderText, iconType, ...rest }) => {
+AntDesign.loadFont();
+
+const FormInput = ({ labelValue, placeholderText, iconType, ...rest }) => {
     return (
         <View style={styles.inputContainer}>
             <View style={styles.iconStyle}>
@@ -14,13 +16,15 @@ export default FormInput = ({ labelValue, placehoderText, iconType, ...rest }) =
                 value={labelValue}
                 style={styles.input}
                 numberOfLines={1}
-                placeholder={placehoderText}
+                placeholder={placeholderText}
                 placeholderTextColor="#666"
                 {...rest}
             />
         </View>
     )
 }
+
+export default FormInput;
 
 const styles = StyleSheet.create({
     inputContainer: {
@@ -57,7 +61,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginTop: 5,
         marginBottom: 10,
-        width: widowWidth / 1.5,
+        width: windowWidth / 1.5,
         height: windowHeight / 15,
         fontSize: 16,
         borderRadius: 8,
