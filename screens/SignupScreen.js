@@ -8,6 +8,7 @@ import SocialButton from '../components/SocialButton';
 export default function SignupScreen({navigation}) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState();
 
   return (
     <View style={styles.container}>
@@ -28,6 +29,13 @@ export default function SignupScreen({navigation}) {
         iconType="lock"
         secureTextEntry={true}
       />
+      <FormInput
+        labelValue={confirmPassword}
+        onChangeText={(userConfirmPassword) => setConfirmPassword(userConfirmPassword)}
+        placeholderText="Confirm Password"
+        iconType="lock"
+        secureTextEntry={true}
+      />
       <FormButton 
         buttonTitle="Sign Up"
         onPress={() => alert('Sign Up Clicked!')}
@@ -45,7 +53,7 @@ export default function SignupScreen({navigation}) {
       </View>
 
       <SocialButton 
-        buttonTitle="Sign In with Facebook"
+        buttonTitle="Sign Up with Facebook"
         btnType="facebook"
         color="#4867aa"
         backgroundColor="#e6eaf4"
@@ -53,15 +61,15 @@ export default function SignupScreen({navigation}) {
       />
 
       <SocialButton 
-        buttonTitle="Sign In with Google"
+        buttonTitle="Sign Up with Google"
         btnType="google"
         color="#de4d41"
         backgroundColor="#f5e7ea"
         onPress={() => {}}
       />
 
-      <TouchableOpacity style={styles.forgotButton} onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.navButtonText}>Don't have an account? Click here.</Text>
+      <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.navButtonText}>Have an account? Sign In.</Text>
       </TouchableOpacity>
     </View>
   );
