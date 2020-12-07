@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import SocialButton from '../components/SocialButton';
+import { AuthContext } from '../navigation/AuthProvider';
 
 export default function SignupScreen({navigation}) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
+
+  const {register} = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
@@ -38,7 +41,7 @@ export default function SignupScreen({navigation}) {
       />
       <FormButton 
         buttonTitle="Sign Up"
-        onPress={() => alert('Sign Up Clicked!')}
+        onPress={() => register(email, password)}
       />
 
       <View style={styles.textPrivate}>
