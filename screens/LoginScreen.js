@@ -10,7 +10,7 @@ export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const {login} = useContext(AuthContext);
+  const {login, googleLogin} = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
@@ -59,7 +59,7 @@ export default function LoginScreen({navigation}) {
             btnType="google"
             color="#de4d41"
             backgroundColor="#f5e7ea"
-            onPress={() => {}}
+            onPress={() => googleLogin()}
           />
         </View>
       ) : null}
