@@ -38,9 +38,9 @@ const FeedStack = ({navigation}) => (
           },
           headerRight: () => (
             <View style={{marginRight: 10}}>
-              <FontAwesome5.Button
-                name="plus"
-                size={22}
+              <Ionicons.Button
+                name="add-circle-outline"
+                size={25}
                 backgroundColor="#fff"
                 color="#2e64e5"
                 onPress={() => navigation.navigate('AddPost')}
