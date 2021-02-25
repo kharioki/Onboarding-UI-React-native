@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Ionions from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
 
 import { 
@@ -82,6 +81,7 @@ export default function HomeScreen() {
 
         await firestore()
         .collection('posts')
+        .orderBy('postTime', 'desc')
         .get()
         .then((querySnapshot) => {
           // console.log('Total posts: ', querySnapshot.size);
