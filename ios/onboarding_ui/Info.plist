@@ -39,6 +39,12 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Social app needs your permission to access Gallery</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Social app needs your permission to access Camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Social app needs your permission to access Microphone</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

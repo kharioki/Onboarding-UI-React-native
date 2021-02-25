@@ -2,6 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, Text} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -132,9 +133,10 @@ const FeedStack = ({navigation}) => (
   
   const AppStack = () => {
     const getTabBarVisibility = (route) => {
-      const routeName = route.state
-        ? route.state.routes[route.state.index].name
-        : '';
+      // const routeName = route?.state
+      //   ? route.state.routes[route.state.index].name
+      //   : '';
+      const routeName = getFocusedRouteNameFromRoute(route) ?? '';
   
       if (routeName === 'Chat') {
         return false;
