@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionions from 'react-native-vector-icons/Ionicons';
+import firestore from '@react-native-firebase/firestore';
 
 import { 
     Container,
@@ -71,10 +72,53 @@ const Posts = [
     },
   ];
 export default function HomeScreen() {
+  const [posts, setPosts] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const list = [];
+
+        await firestore()
+        .collection('posts')
+        .get()
+        .then((querySnapshot) => {
+          // console.log('Total posts: ', querySnapshot.size);
+          querySnapshot.forEach(doc => {
+            const { post, postImg, postTime, userId, likes, comments } = doc.data();
+            list.push({
+              id: doc.id,
+              userId,
+              userName: 'Test name',
+              userImg: 'https://thumbor.forbes.com/thumbor/fit-in/416x416/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5ed554fab14861000600baf1%2F0x0.jpg%3Fbackground%3D000000%26cropX1%3D53%26cropX2%3D739%26cropY1%3D114%26cropY2%3D800',
+              postTime,
+              post,
+              postImg,
+              liked: false,
+              likes,
+              comments
+            });
+          });
+        });
+
+        setPosts(list);
+
+        if(loading) {
+          setLoading(false);
+        }
+        console.log('Posts: ', list);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchPosts();
+  }, []);
     return (
         <Container>
             <FlatList 
-                data={Posts}
+                data={posts}
                 renderItem={({item}) => <PostCard item={item} />}
                 keyExtractor={item => item.id}
                 showsVerticalScrollIndicator={false}
