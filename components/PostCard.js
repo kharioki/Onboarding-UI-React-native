@@ -1,5 +1,7 @@
 import React, { useContext } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
+
 import { AuthContext } from '../navigation/AuthProvider';
 
 import { 
@@ -17,7 +19,7 @@ import {
     Divider
 } from '../styles/FeedStyles';
 
-const PostCard = ({ item }) => {
+const PostCard = ({ item, onDelete }) => {
     const {user, logout} = useContext(AuthContext);
     const likedIcon = item.liked ? 'heart' : 'heart-outline';
     const likedIconColor = item.liked ? '#2e64e5' : '#333';
@@ -45,7 +47,7 @@ const PostCard = ({ item }) => {
                 <UserImg source={{uri: item.userImg}} />
                 <UserInfoText>
                     <UserName>{item.userName}</UserName>
-                    <PostTime>{item.postTime.toString()}</PostTime>
+                    <PostTime>{moment(item.postTime.toDate()).fromNow()}</PostTime>
                 </UserInfoText>
             </UserInfo>
             <PostText>{item.post}</PostText>
@@ -60,7 +62,7 @@ const PostCard = ({ item }) => {
                     <InteractionText>{postComments}</InteractionText>
                 </Interaction>
                 {user.uid === item.userId ? (
-                    <Interaction>
+                    <Interaction onPress={() => onDelete(item.id)}>
                         <Ionicons name="md-trash-bin" size={25} />
                     </Interaction>
                 ) : null}

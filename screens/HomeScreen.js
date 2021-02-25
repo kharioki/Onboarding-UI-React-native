@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, Alert, Text, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 
 import { 
-    Container,
+  Container,
 } from '../styles/FeedStyles';
 import { FlatList } from 'react-native-gesture-handler';
 import PostCard from '../components/PostCard';
@@ -69,60 +70,137 @@ const Posts = [
       likes: '0',
       comments: '0',
     },
-  ];
+];
+
 export default function HomeScreen() {
   const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [deleted, setDeleted] = useState(false);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const list = [];
+  const fetchPosts = async () => {
+    try {
+      const list = [];
 
-        await firestore()
-        .collection('posts')
-        .orderBy('postTime', 'desc')
-        .get()
-        .then((querySnapshot) => {
-          // console.log('Total posts: ', querySnapshot.size);
-          querySnapshot.forEach(doc => {
-            const { post, postImg, postTime, userId, likes, comments } = doc.data();
-            list.push({
-              id: doc.id,
-              userId,
-              userName: 'Test name',
-              userImg: 'https://thumbor.forbes.com/thumbor/fit-in/416x416/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5ed554fab14861000600baf1%2F0x0.jpg%3Fbackground%3D000000%26cropX1%3D53%26cropX2%3D739%26cropY1%3D114%26cropY2%3D800',
-              postTime,
-              post,
-              postImg,
-              liked: false,
-              likes,
-              comments
-            });
+      await firestore()
+      .collection('posts')
+      .orderBy('postTime', 'desc')
+      .get()
+      .then((querySnapshot) => {
+        // console.log('Total posts: ', querySnapshot.size);
+        querySnapshot.forEach(doc => {
+          const { post, postImg, postTime, userId, likes, comments } = doc.data();
+          list.push({
+            id: doc.id,
+            userId,
+            userName: 'Test name',
+            userImg: 'https://thumbor.forbes.com/thumbor/fit-in/416x416/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5ed554fab14861000600baf1%2F0x0.jpg%3Fbackground%3D000000%26cropX1%3D53%26cropX2%3D739%26cropY1%3D114%26cropY2%3D800',
+            postTime,
+            post,
+            postImg,
+            liked: false,
+            likes,
+            comments
           });
         });
+      });
 
-        setPosts(list);
+      setPosts(list);
 
-        if(loading) {
-          setLoading(false);
-        }
-        console.log('Posts: ', list);
-      } catch (error) {
-        console.log(error);
+      if(loading) {
+        setLoading(false);
       }
+      console.log('Posts: ', list);
+    } catch (error) {
+      console.log(error);
     }
-
+  }
+  useEffect(() => {
     fetchPosts();
   }, []);
-    return (
-        <Container>
-            <FlatList 
-                data={posts}
-                renderItem={({item}) => <PostCard item={item} />}
-                keyExtractor={item => item.id}
-                showsVerticalScrollIndicator={false}
-            />
-        </Container>
-    )
+
+  useEffect(() => {
+    fetchPosts();
+    setDeleted(false);
+  }, [deleted]);
+
+  const handleDelete = (postId) => {
+    Alert.alert(
+      'Delete post',
+      'Are you sure?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log(('Cancel Pressed!')),
+          style: 'cancel'
+        },
+        {
+          text: 'Confirm',
+          onPress: () => deletePost(postId),
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+  const deletePost = (postId) => {
+    console.log('Current Post Id: ', postId);
+
+    firestore().collection('posts')
+    .doc(postId)
+    .get()
+    .then(documentSnapshot => {
+      if(documentSnapshot.exists) {
+        const {postImg} = documentSnapshot.data();
+
+        if(postImg !== null) {
+          // delete post image first
+          const storageRef = storage().refFromURL(postImg);
+          const imageRef = storage().ref(storageRef.fullPath);
+
+          imageRef
+          .delete()
+          .then(() => {
+            console.log(`${postImg} has been deleted successfully!!!`);
+            deleteFirestoreData(postId);
+          })
+          .catch((e) => {
+            console.log('Error while deleting the image. ', e);
+          });
+          // otherwise if no image
+        } else {
+          deleteFirestoreData(postId);
+        }
+      }
+    })
+  }
+
+  const deleteFirestoreData = (postId) => {
+    firestore()
+    .collection('posts')
+    .doc(postId)
+    .delete()
+    .then(() => {
+      Alert.alert(
+        'Post Deleted!',
+        'Your post has been deleted Successfully!!!'
+      );
+      setDeleted(true);
+    })
+    .catch((e) => {
+      console.log('Error while deleting the post. ', e);
+    });
+  }
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <Container>
+        <FlatList 
+          data={posts}
+          renderItem={({item}) => <PostCard item={item} onDelete={handleDelete} />}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+        />
+      </Container>
+    </SafeAreaView>
+  )
 }
